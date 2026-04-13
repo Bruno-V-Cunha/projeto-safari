@@ -44,6 +44,12 @@ main {
     max-width: 500px; /* Impede que fique muito largo no PC */
     padding: 20px;
     margin-top: 60px; /* Espaço para o botão de menu */
+    padding-top: 80px; /* Espaço para não começar embaixo dos botões fixos */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 h1 {
