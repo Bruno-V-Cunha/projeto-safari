@@ -427,22 +427,37 @@ body.light-mode {
 }
 
 #paciente-atual-header {
-    position: sticky;
-    top: 10px;
-    z-index: 90;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 50px; /* Aumentamos o recuo lateral para 50px */
     background-color: var(--card-bg);
-    padding: 12px 15px;
-    border-radius: 12px;
-    border: 1px solid var(--border-color);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-radius: 16px;
     margin-bottom: 20px;
+    border: 1px solid var(--border-color);
+    text-align: center;
 }
 
 .header-info {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
     align-items: center;
-    gap: 10px; /* Garante um respiro entre o nome e o score */
+}
+@media (max-width: 380px) {
+    #paciente-atual-header {
+        padding: 15px 45px;
+    }
+    
+    #nome-exibido {
+        font-size: 0.9rem; /* Diminui um pouco o nome se for muito grande */
+        max-width: 150px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
 }
 
 .header-info p {
