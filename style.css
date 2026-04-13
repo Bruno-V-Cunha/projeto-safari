@@ -209,7 +209,7 @@ h2 {
     color: var(--text-primary);
     padding: 10px 15px;
     border-radius: 8px;
-    z-index: 100;
+    z-index: 1001;
 }
 
 /* Sidebar Estilo iOS */
@@ -405,7 +405,7 @@ body.light-mode {
     font-size: 1.2rem;
     padding: 8px 12px;
     border-radius: 8px;
-    z-index: 100;
+    z-index: 1001;
     cursor: pointer;
 }
 
@@ -427,37 +427,22 @@ body.light-mode {
 }
 
 #paciente-atual-header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 15px 50px; /* Aumentamos o recuo lateral para 50px */
+    position: sticky;
+    top: 10px;
+    z-index: 90;
     background-color: var(--card-bg);
-    border-radius: 16px;
-    margin-bottom: 20px;
+    padding: 12px 15px;
+    border-radius: 12px;
     border: 1px solid var(--border-color);
-    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
 }
 
 .header-info {
     display: flex;
-    flex-direction: column;
-    gap: 8px;
-    width: 100%;
+    justify-content: space-between;
     align-items: center;
-}
-@media (max-width: 380px) {
-    #paciente-atual-header {
-        padding: 15px 45px;
-    }
-    
-    #nome-exibido {
-        font-size: 0.9rem; /* Diminui um pouco o nome se for muito grande */
-        max-width: 150px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
+    gap: 10px; /* Garante um respiro entre o nome e o score */
 }
 
 .header-info p {
