@@ -40,13 +40,11 @@ body {
 }
 
 main {
-    display: flex;
-    flex-direction: column; 
-    align-items: center;    
     width: 100%;
     max-width: 500px;
+    margin: 0 auto;
     padding: 20px;
-    margin: 70px auto 0 auto; 
+    padding-top: 70px;
 }
 
 h1 {
