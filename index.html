@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Clínica</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Glasgow">
+    <link rel="apple-touch-icon" href="icon-192.png">
+
+</head>
+<body>
+    <main>
+        <div id="paciente-atual-header">
+        <div class="header-info">
+            <p>Atendimento: <strong id="nome-exibido">Nenhum selecionado</strong></p>
+            <div id="score-badge">Pontuação do Paciente: <span id="pontuacao-total">0</span>/15</div>
+        </div>
+
+        <div class="quick-actions">
+            <button onclick="limparAvaliacao()" class="btn-action-pill">🧹 Limpar</button>
+            <button onclick="exportarDados()" class="btn-action-pill">💾 Exportar</button>
+        </div>
+    </div>
+        <h1>Escala de Glasgow</h1>
+        
+        <section id="ocular">
+            <h2>1. Abertura Ocular</h2>
+            <button class="btn-calc" onclick="calcularGlasgow('ocular', 4, this)">Espontânea (4)</button>
+            <button class="btn-calc" onclick="calcularGlasgow('ocular', 3, this)">À voz (3)</button>
+            <button class="btn-calc" onclick="calcularGlasgow('ocular', 2, this)">À dor (2)</button>
+            <button class="btn-calc" onclick="calcularGlasgow('ocular', 1, this)">Nenhuma (1)</button>
+        </section>
+
+        <section id="verbal">
+            <h2>2. Resposta Verbal</h2>
+            <button class="btn-calc" onclick="calcularGlasgow('verbal', 5, this)">Orientada (5)</button>
+            <button class="btn-calc" onclick="calcularGlasgow('verbal', 4, this)">Confusa (4)</button>
+            <button class="btn-calc" onclick="calcularGlasgow('verbal', 3, this)">Palavras Inapropriadas (3)</button>
+            <button class="btn-calc" onclick="calcularGlasgow('verbal', 2, this)">Sons Incompreensíveis (2)</button>
+            <button class="btn-calc" onclick="calcularGlasgow('verbal', 1, this)">Nenhuma (1)</button>
+        </section>
+
+        <section id="motora">
+            <h2>3. Resposta Motora</h2>
+            <button class="btn-calc" onclick="calcularGlasgow('motora', 6, this)">Obedece comandos (6)</button>
+            <button class="btn-calc" onclick="calcularGlasgow('motora', 5, this)">Localiza a dor (5)</button>
+            <button class="btn-calc" onclick="calcularGlasgow('motora', 4, this)">Movimento de Retirada (4)</button>
+            <button class="btn-calc" onclick="calcularGlasgow('motora', 3, this)">Flexão Anormal / Decorticação (3)</button>
+            <button class="btn-calc" onclick="calcularGlasgow('motora', 2, this)">Extensão Anormal / Descerebração (2)</button>
+            <button class="btn-calc" onclick="calcularGlasgow('motora', 1, this)">Nenhuma (1)</button>
+        </section>
+
+        <section id="clearance-section">
+        <h2>Calculadora de Clearance (Rim)</h2>
+            <div class="input-group-clinico">
+                <input type="number" id="rim-idade" placeholder="Idade">
+                <input type="number" id="rim-peso" placeholder="Peso (kg)">
+                <input type="number" id="rim-creatinina" placeholder="Creatinina">
+            <select id="rim-sexo">
+                <option value="1">Masculino</option>
+                <option value="0.85">Feminino</option>
+            </select>
+            <button onclick="calcularRim()" class="btn-calc-especial">Calcular Clearance</button>
+            </div>
+        <div id="resultado-rim" class="resultado-interno"></div>
+</section>
+        
+    </main>
+    <button id="theme-toggle" onclick="toggleTheme()">☀️</button>
+    <body>
+    <button id="menu-toggle" onclick="toggleSidebar()">☰</button>
+
+    <nav id="sidebar">
+        <div class="sidebar-header">
+            <h3>Pacientes</h3>
+            <button onclick="toggleSidebar()">✕</button>
+        </div>
+        
+        <div class="cadastro-paciente">
+            <input type="text" id="nome-paciente" placeholder="Nome do paciente...">
+            <button onclick="adicionarPaciente()" class="btn-add">+</button>
+        </div>
+
+        <ul id="lista-pacientes">
+            </ul>
+    </nav>
+
+    <div id="toast-container"></div>
+        <div id="modal-overlay" class="modal-overlay">
+        <div class="modal-content">
+            <h3 id="modal-title">Excluir Paciente</h3>
+            <p id="modal-text">Tem certeza que deseja apagar os dados?</p>
+            <div class="modal-buttons">
+                <button onclick="fecharModal()" class="btn-cancelar">Cancelar</button>
+                <button id="btn-confirmar-exclusao" class="btn-confirmar">Excluir</button>
+            </div>
+        </div>
+    </div>
+    <script>
+    // Registra o Service Worker
+        if ('serviceWorker' in navigator) {
+         navigator.serviceWorker.register('sw.js');
+        }
+    </script>
+    
+    <script src="script.js"></script>
+</body>
+</html>

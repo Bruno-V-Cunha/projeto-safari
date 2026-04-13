@@ -1,0 +1,629 @@
+/* 1. Variáveis de cores (Fica muito mais fácil de mudar depois) */
+:root {
+    --bg-color: #000000;
+    --card-bg: #1c1c1e;
+    --text-primary: #f2f2f7;
+    --text-secondary: #aeaeb2;
+    --accent-color: #0a84ff;
+    --border-color: #38383a;
+    --sidebar-bg: rgba(28, 28, 30, 0.95); 
+    --toast-bg: rgba(30, 30, 30, 0.85);   
+    
+    /* NOVAS: Para botões, inputs e rodapé no modo escuro */
+    --element-bg: #2c2c2e; 
+    --element-hover: #3a3a3c;
+    --footer-bg: rgba(28, 28, 30, 0.9);
+}
+h1, h2, h3, p, span, .btn-calc, .item-paciente, .letra-header {
+    color: var(--text-primary);
+}
+
+/* Ajuste específico para o placeholder do input de nome (aquele texto fantasma) */
+input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.8;
+}
+
+/* 2. Reset básico e Fonte padrão */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centraliza o conteúdo horizontalmente */
+    background-color: var(--bg-color);
+}
+
+main {
+    width: 100%;
+    max-width: 500px; /* Impede que fique muito largo no PC */
+    padding: 20px;
+    margin-top: 60px; /* Espaço para o botão de menu */
+}
+
+h1 {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-bottom: 24px;
+    font-weight: 600;
+}
+
+/* 4. Estilo dos "Cards" de cada categoria */
+section {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
+h2 {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 8px;
+}
+
+/* 5. Estilo dos Botões ("Fat Finger") */
+.btn-calc {
+    width: 100%;
+    background-color: var(--element-bg);
+    color: var(--text-primary);
+    border: none;
+    padding: 16px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    font-size: 1rem;
+    text-align: left;
+    transition: transform 0.1s ease, background-color 0.2s ease;
+}
+
+/* Remove a margem do último botão dentro do card */
+.btn-calc:last-child {
+    margin-bottom: 0;
+}
+
+/* Efeito tátil muito importante para mobile: o botão "afunda" e fica azul ao tocar */
+.btn-calc:active {
+    background-color: var(--accent-color);
+    transform: scale(0.98); 
+}
+/* Estilo para o botão quando estiver selecionado */
+.btn-calc.active {
+    background-color: var(--accent-color) !important;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 0 10px rgba(10, 132, 255, 0.5);
+}
+
+/* 6. Rodapé Fixo com o Resultado */
+#resultado-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--footer-bg); /* Fundo com leve transparência */
+    backdrop-filter: blur(10px); /* Efeito de vidro borrado padrão do iOS */
+    -webkit-backdrop-filter: blur(10px); /* Para funcionar no Safari */
+    border-top: 1px solid var(--border-color);
+    padding: 20px;
+    text-align: center;
+    z-index: 100;
+}
+
+#resultado-container h2 {
+    margin: 0;
+    border: none;
+    font-size: 1.4rem;
+    color: var(--text-primary);
+}
+
+#pontuacao-total {
+    color: var(--accent-color);
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+/*7. Sistema de Notificações (Toast - Estilo iOS Nativo)*/
+
+/* =========================================
+   7. Sistema de Notificações (Toast - Estilo iOS Nativo)
+   ========================================= */
+#toast-container {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 90%;
+    max-width: 380px;
+    pointer-events: none;
+}
+
+.toast {
+    /* Fundo escuro translúcido com o Blur da Apple */
+    background-color: var(--toast-bg); 
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px); /* Essencial para o iPhone */
+    
+    color: var(--text-primary);
+    border-radius: 20px; /* Bordas bem arredondadas */
+    padding: 12px 16px;
+    
+    /* Layout com Ícone na esquerda e Texto na direita */
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Borda bem sutil dando brilho */
+    text-align: left;
+    
+    /* Configuração da Animação estilo "Mola" */
+    opacity: 0;
+    transform: translateY(-40px) scale(0.9);
+    transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+/* O "Alerta" vermelho circular */
+.toast-icon {
+    background-color: #ff3b30; /* Vermelho oficial do iOS */
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    flex-shrink: 0; /* Impede o ícone de esmagar se o texto for longo */
+}
+
+.toast-message {
+    font-size: 0.95rem;
+    font-weight: 500;
+    line-height: 1.3;
+}
+
+/* 8 - side bar*/
+#menu-toggle {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 10px 15px;
+    border-radius: 8px;
+    z-index: 100;
+}
+
+/* Sidebar Estilo iOS */
+#sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 100%;
+    background: var(--sidebar-bg);
+    backdrop-filter: blur(20px);
+    z-index: 1000;
+    border-right: 1px solid var(--border-color);
+    padding: 20px;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateX(-100%); /* Escondido por padrão */
+}
+
+#sidebar.open {
+    transform: translateX(0); /* Mostra a barra */
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.cadastro-paciente {
+    display: flex;
+    flex-direction: row; /* OBRIGA a ficar na horizontal */
+    align-items: stretch; 
+    gap: 10px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.cadastro-paciente input {
+    flex: 1; /* Pega o máximo de espaço possível */
+    min-width: 0;
+    background: var(--element-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 1rem;
+}
+
+.btn-add {
+    background: var(--accent-color);
+    color: white; 
+    border: none;
+    border-radius: 8px;
+    width: 45px;
+    flex-shrink: 0; /* IMPEDE que o botão seja esmagado pelo input */
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#lista-pacientes {
+    list-style: none;
+    padding: 0;
+}
+
+.grupo-letra {
+    margin-bottom: 8px;
+}
+
+/* O botão com a letra (ex: "A", "B", "C") */
+.letra-header {
+    background-color: var(--element-bg);
+    color: var(--accent-color);
+    padding: 10px 15px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none; /* Evita que o texto seja selecionado ao clicar rápido */
+    transition: background-color 0.2s;
+}
+
+.letra-header:hover {
+    background-color: var(--element-hover);
+}
+
+/* A setinha que vai girar */
+.letra-header .seta {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    transition: transform 0.3s ease;
+}
+
+/* A lista de nomes dentro da letra (Escondida por padrão) */
+.lista-pacientes-letra {
+    list-style: none;
+    padding-left: 0;
+    display: none; /* Esconde os nomes */
+    margin-top: 5px;
+}
+
+/* Classe que o JS vai adicionar para mostrar os nomes */
+.lista-pacientes-letra.aberta {
+    display: block; 
+}
+
+/* O nome do paciente em si */
+.item-paciente {
+    padding: 12px 15px 12px 30px; /* O '30px' dá um recuo na esquerda para parecer subtópico */
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.item-paciente {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px; /* Ajustado para acomodar o botão */
+}
+
+.btn-excluir {
+    background: none;
+    border: none;
+    color: #ff3b30; /* Vermelho iOS */
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 5px 10px;
+    opacity: 0.7;
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.btn-excluir:hover {
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+/* Tira a linha de baixo do último paciente da letra */
+.item-paciente:last-child {
+    border-bottom: none;
+}
+
+.item-paciente:hover {
+    background-color: var(--element-hover);
+    border-radius: 8px;
+}
+
+/* 1. Variáveis de cores (Tema Escuro Padrão) */
+:root {
+    --bg-color: #000000;
+    --card-bg: #1c1c1e;
+    --text-primary: #f2f2f7;
+    --text-secondary: #aeaeb2;
+    --accent-color: #0a84ff;
+    --border-color: #38383a;
+    --sidebar-bg: rgba(28, 28, 30, 0.95); /* Nova variável para a barra lateral */
+    --toast-bg: rgba(30, 30, 30, 0.85);   /* Nova variável para o toast */
+}
+
+/* 2. O Tema Claro (Muda tudo quando o body tiver essa classe) */
+body.light-mode {
+    --bg-color: #f2f2f7;        
+    --card-bg: #ffffff;         
+    --text-primary: #000000;    
+    --text-secondary: #6c6c70;  
+    --accent-color: #007aff;    
+    --border-color: #c6c6c8;    
+    --sidebar-bg: rgba(255, 255, 255, 0.95); 
+    --toast-bg: rgba(255, 255, 255, 0.85);
+    
+    /* NOVAS: Para botões, inputs e rodapé no modo claro (Cinza padrão da Apple) */
+    --element-bg: #e5e5ea; 
+    --element-hover: #d1d1d6;
+    --footer-bg: rgba(255, 255, 255, 0.9);
+}
+
+/* --- Ajustes Visuais --- */
+/* Formata o botão do sol/lua */
+#theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    font-size: 1.2rem;
+    padding: 8px 12px;
+    border-radius: 8px;
+    z-index: 100;
+    cursor: pointer;
+}
+
+#paciente-atual-header {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    background-color: var(--card-bg); /* Fica igual a um card */
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+#nome-exibido {
+    color: var(--accent-color); /* Destaca o nome do paciente em azul */
+    font-weight: bold;
+}
+
+#paciente-atual-header {
+    position: sticky;
+    top: 10px;
+    z-index: 90;
+    background-color: var(--card-bg);
+    padding: 12px 15px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.header-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px; /* Garante um respiro entre o nome e o score */
+}
+
+.header-info p {
+    margin: 0;
+    white-space: nowrap;      /* Impede que o texto quebre linha */
+    overflow: hidden;         /* Esconde o que sobrar */
+    text-overflow: ellipsis;  /* Adiciona "..." no final se o nome for gigante */
+    flex: 1;                  /* Faz o nome ocupar o máximo de espaço, mas respeitando o badge */
+    min-width: 0;             /* Necessário para o ellipsis funcionar em flexbox */
+}
+
+#score-badge {
+    background-color: var(--element-bg);
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-weight: bold;
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    white-space: nowrap;      /* Garante que o badge também não quebre */
+    flex-shrink: 0;           /* Proíbe o badge de encolher */
+    font-size: 0.9rem;
+}
+
+#pontuacao-total {
+    color: var(--accent-color);
+    font-size: 1.1rem;
+}
+
+/* Remova o padding-bottom que tínhamos no body, pois não temos mais rodapé fixo */
+body {
+    padding-bottom: 20px; /* Apenas um respiro no final da página */
+}
+
+/* --- Modal de Confirmação Estilo iOS --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    display: none; /* Escondido por padrão */
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+.modal-content {
+    background: var(--sidebar-bg);
+    backdrop-filter: blur(20px);
+    padding: 24px;
+    border-radius: 20px;
+    width: 85%;
+    max-width: 320px;
+    text-align: center;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+    transform: scale(0.9);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal-overlay.show {
+    display: flex;
+}
+
+.modal-overlay.show .modal-content {
+    transform: scale(1);
+}
+
+.modal-content h3 {
+    margin-bottom: 10px;
+    color: var(--text-primary);
+}
+
+.modal-content p {
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.modal-buttons button {
+    flex: 1;
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-cancelar {
+    background: var(--element-bg);
+    color: var(--text-primary);
+}
+
+.btn-confirmar {
+    background: #ff3b30; /* Vermelho vibrante */
+    color: white;
+}
+
+/* Container dos botões no topo */
+
+.quick-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-color); /* Linha divisória sutil */
+}
+
+/* Estilo de botão "Pílula" iOS */
+.btn-action-pill {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px;
+    border-radius: 20px; /* Bem arredondado */
+    border: 1px solid var(--border-color);
+    background-color: var(--element-bg);
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s, transform 0.1s;
+}
+
+.btn-action-pill:active {
+    background-color: var(--element-hover);
+    transform: scale(0.96);
+}
+
+/* No modo claro, podemos dar um brilho extra */
+body.light-mode .btn-action-pill {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.btn-sidebar {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--element-bg);
+    color: var(--text-primary);
+    cursor: pointer;
+}
+
+.input-group-clinico {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.input-group-clinico input, .input-group-clinico select {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--element-bg);
+    color: var(--text-primary);
+}
+
+.btn-calc-especial {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.resultado-interno {
+    margin-top: 15px;
+    padding: 15px;
+    background: rgba(10, 132, 255, 0.1);
+    border-radius: 8px;
+    display: none;
+}
