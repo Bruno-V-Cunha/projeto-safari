@@ -428,7 +428,7 @@ body.light-mode {
 }
 
 #paciente-atual-header {
-    position: sticky;
+    position: static;
     top: 10px;
     z-index: 90;
     background-color: var(--card-bg);
