@@ -210,7 +210,7 @@ h2 {
     color: var(--text-primary);
     padding: 10px 15px;
     border-radius: 8px;
-    z-index: 1001;
+    z-index: 999;
 }
 
 /* Sidebar Estilo iOS */
@@ -406,7 +406,7 @@ body.light-mode {
     font-size: 1.2rem;
     padding: 8px 12px;
     border-radius: 8px;
-    z-index: 1001;
+    z-index: 999;
     cursor: pointer;
 }
 
